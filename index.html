@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Temperos Baiano - Pedidos</title>
+    <style>
+        body { font-family: sans-serif; background: #f4f4f4; padding: 15px; color: #333; }
+        .container { max-width: 400px; background: white; padding: 20px; border-radius: 15px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); margin: auto; }
+        h2 { color: #d35400; text-align: center; margin-bottom: 5px; }
+        .info { font-size: 0.8em; color: #666; text-align: center; margin-bottom: 20px; }
+        h3 { color: #555; border-bottom: 1px solid #ddd; padding-bottom: 5px; margin-top: 20px; }
+        .item { margin-bottom: 15px; padding: 10px; background: #fff9f4; border-radius: 8px; }
+        .item-flex { display: flex; justify-content: space-between; align-items: center; }
+        .price { color: #d35400; font-weight: bold; }
+        input[type="number"] { width: 50px; padding: 8px; border-radius: 5px; border: 1px solid #ccc; }
+        input[type="text"], select { width: 100%; padding: 10px; margin-top: 8px; border: 1px solid #ddd; border-radius: 5px; box-sizing: border-box; }
+        .total-box { text-align: center; margin-top: 20px; font-size: 1.2em; font-weight: bold; color: #27ae60; background: #f0fff4; padding: 15px; border-radius: 8px; }
+        button { width: 100%; background: #25d366; color: white; border: none; padding: 18px; font-weight: bold; cursor: pointer; border-radius: 8px; font-size: 1.1em; margin-top: 15px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Temperos Baiano 🍱</h2>
+        <p class="info">Ramos, Olaria e Bonsucesso<br>Pedidos: 11h às 14h</p>
+
+        <h3>Marmitas</h3>
+        <div class="item">
+            <div class="item-flex"><span>Marmita (1 Prot.)</span><span class="price">R$ 20,00</span><input type="number" id="m1" value="0" min="0" onchange="calc()"></div>
+            <input type="text" id="p1" placeholder="Qual a proteína?">
+        </div>
+        <div class="item">
+            <div class="item-flex"><span>Marmita (2 Prot.)</span><span class="price">R$ 22,00</span><input type="number" id="m2" value="0" min="0" onchange="calc()"></div>
+            <input type="text" id="p2" placeholder="Quais as 2 proteínas?">
+        </div>
+
+        <h3>Bebidas</h3>
+        <select id="bebida-lata" onchange="calc()">
+            <option value="0">Escolher Lata (R$ 7,00)</option>
+            <option value="7">Coca-Cola</option><option value="7">Guaraná</option><option value="7">Sprite</option><option value="7">Fanta</option>
+        </select>
+        <select id="outras" onchange="calc()" style="margin-top:10px">
+            <option value="0">Outras Bebidas...</option>
+            <option value="14">Coca/Pepsi/Guaraná 2L - R$ 14,00</option>
+            <option value="12">Coca/Guaraná 1.5L - R$ 12,00</option>
+            <option value="9">Guaraná 600ml - R$ 9,00</option>
+            <option value="7">Guaraviton / H2O - R$ 7,00</option>
+            <option value="2.5">Guaravita / Camp - R$ 2,50</option>
+        </select>
+
+        <h3>Entrega</h3>
+        <input type="text" id="nome" placeholder="Seu Nome">
+        <input type="text" id="end" placeholder="Endereço Completo">
+        <select id="pgto">
+            <option value="">Forma de Pagamento</option>
+            <option value="Dinheiro">Dinheiro</option><option value="Pix">Pix</option><option value="Cartão">Cartão/Vale</option>
+        </select>
+
+        <div class="total-box">Total: <span id="total">R$ 0,00</span></div>
+        <button onclick="enviar()">ENVIAR PEDIDO NO WHATSAPP</button>
+    </div>
+
+    <script>
+        function calc() {
+            let t = (document.getElementById('m1').value * 20) + 
+                    (document.getElementById('m2').value * 22) + 
+                    parseFloat(document.getElementById('bebida-lata').value) + 
+                    parseFloat(document.getElementById('outras').value);
+            document.getElementById('total').innerText = "R$ " + t.toFixed(2).replace('.',',');
+        }
+        function enviar() {
+            const fone = "5521967714571";
+            const nome = document.getElementById('nome').value;
+            const end = document.getElementById('end').value;
+            const m1 = document.getElementById('m1').value;
+            const m2 = document.getElementById('m2').value;
+            if(!nome || !end) return alert("Preencha nome e endereço!");
+            
+            let msg = `*NOVO PEDIDO*%0A*Cliente:* ${nome}%0A*End:* ${end}%0A`;
+            if(m1 > 0) msg += `- ${m1}x Marmita 1P (${document.getElementById('p1').value})%0A`;
+            if(m2 > 0) msg += `- ${m2}x Marmita 2P (${document.getElementById('p2').value})%0A`;
+            msg += `%0A*Total:* ${document.getElementById('total').innerText}%0A*Pagamento:* ${document.getElementById('pgto').value}`;
+            window.open(`https://wa.me/${fone}?text=${msg}`);
+        }
+    </script>
+</body>
+</html>
