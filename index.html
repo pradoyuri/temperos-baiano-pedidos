@@ -3,84 +3,137 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Temperos Baiano - Pedidos</title>
+    <title>Temperos Baiano - Pedido Online</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Montserrat', sans-serif; background: #f4f4f4; padding: 15px; color: #333; }
-        .container { max-width: 400px; background: white; padding: 20px; border-radius: 15px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); margin: auto; }
-        h2 { color: #d35400; text-align: center; margin-bottom: 5px; }
-        .info { font-size: 0.8em; color: #666; text-align: center; margin-bottom: 20px; }
-        h3 { color: #555; border-bottom: 1px solid #ddd; padding-bottom: 5px; margin-top: 20px; }
-        .item { margin-bottom: 15px; padding: 10px; background: #fff9f4; border-radius: 8px; }
-        .item-flex { display: flex; justify-content: space-between; align-items: center; }
-        .price { color: #d35400; font-weight: bold; }
-        input[type="number"] { width: 50px; padding: 8px; border-radius: 5px; border: 1px solid #ccc; }
-        input[type="text"], select { width: 100%; padding: 10px; margin-top: 8px; border: 1px solid #ddd; border-radius: 5px; box-sizing: border-box; }
-        .total-box { text-align: center; margin-top: 20px; font-size: 1.2em; font-weight: bold; color: #27ae60; background: #f0fff4; padding: 15px; border-radius: 8px; }
-        button { width: 100%; background: #25d366; color: white; border: none; padding: 18px; font-weight: bold; cursor: pointer; border-radius: 8px; font-size: 1.1em; margin-top: 15px; }
+        :root { --primaria: #e67e22; --secundaria: #27ae60; --fundo: #f8f9fa; }
+        body { font-family: 'Montserrat', sans-serif; background: var(--fundo); padding: 15px; color: #333; }
+        .container { max-width: 450px; background: white; padding: 25px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); margin: auto; }
+        h2 { color: var(--primaria); text-align: center; margin-bottom: 5px; text-transform: uppercase; }
+        .info-entrega { font-size: 0.85em; color: #7f8c8d; text-align: center; margin-bottom: 20px; line-height: 1.5; }
+        h3 { color: #2c3e50; border-left: 5px solid var(--primaria); padding-left: 10px; margin-top: 25px; font-size: 1.1em; }
+        
+        .item-container { background: #fffdf9; padding: 15px; border-radius: 12px; margin-bottom: 15px; border: 1px solid #f9ebe0; }
+        .item-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+        .item-row label { font-weight: bold; flex-grow: 1; font-size: 0.95em; }
+        .item-row .price { color: var(--primaria); font-weight: bold; margin-right: 10px; }
+        
+        input[type="number"] { width: 50px; padding: 8px; border: 1px solid #ddd; border-radius: 8px; text-align: center; }
+        input[type="text"] { width: 100%; padding: 12px; margin-top: 8px; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; }
+        
+        .pix-section { background: #ebf5fb; padding: 15px; border-radius: 12px; border: 1px solid #d4e6f1; margin-top: 20px; text-align: center; }
+        .pix-key { background: white; padding: 10px; border-radius: 5px; border: 1px dashed #3498db; font-size: 0.8em; word-break: break-all; margin: 10px 0; }
+        .btn-copy { background: #3498db; color: white; border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer; font-size: 0.8em; }
+
+        .total-box { text-align: center; margin-top: 25px; font-size: 1.5em; font-weight: bold; color: var(--secundaria); }
+        
+        button.btn-finalizar { width: 100%; background: var(--secundaria); color: white; border: none; padding: 20px; font-weight: bold; cursor: pointer; border-radius: 12px; font-size: 1.1em; margin-top: 20px; box-shadow: 0 4px 0 #1e8449; transition: 0.2s; }
+        button.btn-finalizar:active { transform: translateY(2px); box-shadow: 0 2px 0 #1e8449; }
     </style>
 </head>
 <body>
     <div class="container">
-        <h2>TEMPEROS BAIANO</h2>
-        <p class="info">Entrega Grátis: Ramos, Olaria e Bonsucesso<br>Funcionamento: 11h às 14h</p>
-
-        <h3>Marmitas</h3>
-        <div class="item">
-            <div class="item-flex"><span>Marmita (1 Prot.)</span><span class="price">R$ 20,00</span><input type="number" id="m1" value="0" min="0" onchange="calc()"></div>
-            <input type="text" id="p1" placeholder="Qual a proteína?">
+        <h2>Temperos Baiano 🍱</h2>
+        <p class="info-entrega">📍 Ramos, Olaria e Bonsucesso<br>⏰ Pedidos das 11h às 14h</p>
+        
+        <h3>Escolha sua Marmita</h3>
+        
+        <div class="item-container">
+            <div class="item-row">
+                <label>Marmita Padrão (1 Prot.)</label>
+                <span class="price">R$ 20,00</span>
+                <input type="number" id="q-20" value="0" min="0" onchange="calc()">
+            </div>
+            <input type="text" id="p-20" placeholder="Qual a proteína?">
         </div>
-        <div class="item">
-            <div class="item-flex"><span>Marmita (2 Prot.)</span><span class="price">R$ 22,00</span><input type="number" id="m2" value="0" min="0" onchange="calc()"></div>
-            <input type="text" id="p2" placeholder="Quais as 2 proteínas?">
+
+        <div class="item-container">
+            <div class="item-row">
+                <label>Marmita Dupla (2 Prots.)</label>
+                <span class="price">R$ 22,00</span>
+                <input type="number" id="q-22" value="0" min="0" onchange="calc()">
+            </div>
+            <input type="text" id="p-22" placeholder="Quais as proteínas?">
         </div>
 
-        <h3>Bebidas</h3>
-        <select id="bebida-lata" onchange="calc()">
-            <option value="0">Escolher Lata (R$ 7,00)</option>
-            <option value="7">Coca-Cola</option><option value="7">Guaraná</option><option value="7">Sprite</option><option value="7">Fanta</option>
-        </select>
-        <select id="outras" onchange="calc()" style="margin-top:10px">
-            <option value="0">Outras Bebidas...</option>
-            <option value="14">Coca/Pepsi/Guaraná 2L - R$ 14,00</option>
-            <option value="12">Coca/Guaraná 1.5L - R$ 12,00</option>
-            <option value="9">Guaraná 600ml - R$ 9,00</option>
-            <option value="7">Guaraviton / H2O - R$ 7,00</option>
-            <option value="2.5">Guaravita / Camp - R$ 2,50</option>
-        </select>
+        <div class="item-container">
+            <div class="item-row">
+                <label>Marmita Carne Especial</label>
+                <span class="price">R$ 24,00</span>
+                <input type="number" id="q-24" value="0" min="0" onchange="calc()">
+            </div>
+            <input type="text" id="p-24" placeholder="Qual a carne de hoje?">
+        </div>
 
-        <h3>Entrega</h3>
+        <h3>Dados e Pagamento</h3>
         <input type="text" id="nome" placeholder="Seu Nome">
         <input type="text" id="end" placeholder="Endereço Completo">
-        <select id="pgto">
-            <option value="">Forma de Pagamento</option>
-            <option value="Dinheiro">Dinheiro</option><option value="Pix">Pix</option><option value="Cartão">Cartão/Vale</option>
+        
+        <select id="metodo-pgto" onchange="togglePix()" style="width:100%; padding:12px; margin-top:10px; border-radius:8px; border:1px solid #ddd;">
+            <option value="Dinheiro">Pagar na Entrega (Dinheiro)</option>
+            <option value="Cartão">Pagar na Entrega (Cartão/Vale)</option>
+            <option value="Pix">Pagar Agora via Pix</option>
         </select>
 
+        <div id="pix-area" class="pix-section" style="display:none;">
+            <p style="font-weight:bold; margin-bottom:5px;">Pagamento via Pix</p>
+            <p style="font-size:0.8em;">Chave Pix (Celular):</p>
+            <div class="pix-key" id="chave-pix">21967714571</div>
+            <button class="btn-copy" onclick="copyPix()">Copiar Chave Pix</button>
+            <p style="font-size:0.7em; margin-top:10px; color:#e74c3c;">* Realize o pagamento e anexe o comprovante na conversa do WhatsApp.</p>
+        </div>
+
         <div class="total-box">Total: <span id="total">R$ 0,00</span></div>
-        <button onclick="enviar()">ENVIAR PEDIDO NO WHATSAPP</button>
+
+        <button class="btn-finalizar" onclick="enviar()">FINALIZAR E ENVIAR PEDIDO</button>
     </div>
 
     <script>
         function calc() {
-            let t = (document.getElementById('m1').value * 20) + 
-                    (document.getElementById('m2').value * 22) + 
-                    parseFloat(document.getElementById('bebida-lata').value) + 
-                    parseFloat(document.getElementById('outras').value);
-            document.getElementById('total').innerText = "R$ " + t.toFixed(2).replace('.',',');
+            let total = (document.getElementById('q-20').value * 20) + 
+                        (document.getElementById('q-22').value * 22) + 
+                        (document.getElementById('q-24').value * 24);
+            document.getElementById('total').innerText = `R$ ${total.toFixed(2).replace('.', ',')}`;
         }
+
+        function togglePix() {
+            const area = document.getElementById('pix-area');
+            area.style.display = document.getElementById('metodo-pgto').value === 'Pix' ? 'block' : 'none';
+        }
+
+        function copyPix() {
+            const chave = document.getElementById('chave-pix').innerText;
+            navigator.clipboard.writeText(chave);
+            alert("Chave Pix copiada!");
+        }
+
         function enviar() {
             const fone = "5521967714571";
             const nome = document.getElementById('nome').value;
             const end = document.getElementById('end').value;
-            const m1 = document.getElementById('m1').value;
-            const m2 = document.getElementById('m2').value;
-            if(!nome || !end) return alert("Preencha nome e endereço!");
+            const pgto = document.getElementById('metodo-pgto').value;
             
-            let msg = `*NOVO PEDIDO*%0A*Cliente:* ${nome}%0A*End:* ${end}%0A`;
-            if(m1 > 0) msg += `- ${m1}x Marmita 1P (${document.getElementById('p1').value})%0A`;
-            if(m2 > 0) msg += `- ${m2}x Marmita 2P (${document.getElementById('p2').value})%0A`;
-            msg += `%0A*Total:* ${document.getElementById('total').innerText}%0A*Pagamento:* ${document.getElementById('pgto').value}`;
+            if(!nome || !end) return alert("Por favor, preencha Nome e Endereço.");
+
+            let itens = [];
+            const check = (idQ, idP, label) => {
+                const q = document.getElementById(idQ).value;
+                const p = document.getElementById(idP).value;
+                if(q > 0) itens.push(`- ${q}x ${label} (${p || 'Não informado'})`);
+            };
+
+            check('q-20', 'p-20', 'Marmita R$20');
+            check('q-22', 'p-22', 'Marmita R$22');
+            check('q-24', 'p-24', 'Marmita R$24');
+
+            if(itens.length === 0) return alert("Adicione pelo menos uma marmita.");
+
+            let msg = `*NOVO PEDIDO - TEMPEROS BAIANO*%0A%0A`;
+            msg += `*Cliente:* ${nome}%0A*Endereço:* ${end}%0A*Pagamento:* ${pgto}%0A%0A`;
+            msg += `*ITENS:*%0A${itens.join('%0A')}%0A%0A`;
+            msg += `*TOTAL: ${document.getElementById('total').innerText}*`;
+            if(pgto === 'Pix') msg += `%0A%0A_Aguardando envio do comprovante pelo cliente._`;
+
             window.open(`https://wa.me/${fone}?text=${msg}`);
         }
     </script>
