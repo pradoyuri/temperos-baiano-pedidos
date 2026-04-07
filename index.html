@@ -3,139 +3,201 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Temperos Baiano - Pedido Online</title>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <title>Temperos Baiano - Cardápio Online</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
-        :root { --primaria: #e67e22; --secundaria: #27ae60; --fundo: #f8f9fa; }
-        body { font-family: 'Montserrat', sans-serif; background: var(--fundo); padding: 15px; color: #333; }
-        .container { max-width: 450px; background: white; padding: 25px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); margin: auto; }
-        h2 { color: var(--primaria); text-align: center; margin-bottom: 5px; text-transform: uppercase; }
-        .info-entrega { font-size: 0.85em; color: #7f8c8d; text-align: center; margin-bottom: 20px; line-height: 1.5; }
-        h3 { color: #2c3e50; border-left: 5px solid var(--primaria); padding-left: 10px; margin-top: 25px; font-size: 1.1em; }
-        
-        .item-container { background: #fffdf9; padding: 15px; border-radius: 12px; margin-bottom: 15px; border: 1px solid #f9ebe0; }
-        .item-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
-        .item-row label { font-weight: bold; flex-grow: 1; font-size: 0.95em; }
-        .item-row .price { color: var(--primaria); font-weight: bold; margin-right: 10px; }
-        
-        input[type="number"] { width: 50px; padding: 8px; border: 1px solid #ddd; border-radius: 8px; text-align: center; }
-        input[type="text"] { width: 100%; padding: 12px; margin-top: 8px; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; }
-        
-        .pix-section { background: #ebf5fb; padding: 15px; border-radius: 12px; border: 1px solid #d4e6f1; margin-top: 20px; text-align: center; }
-        .pix-key { background: white; padding: 10px; border-radius: 5px; border: 1px dashed #3498db; font-size: 0.8em; word-break: break-all; margin: 10px 0; }
-        .btn-copy { background: #3498db; color: white; border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer; font-size: 0.8em; }
+        :root {
+            --primaria: #e67e22;
+            --secundaria: #27ae60;
+            --fundo: #f8f9fa;
+            --texto: #2d3436;
+            --branco: #ffffff;
+        }
 
-        .total-box { text-align: center; margin-top: 25px; font-size: 1.5em; font-weight: bold; color: var(--secundaria); }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        body { background: var(--fundo); color: var(--texto); padding-bottom: 90px; }
+
+        header { background: var(--branco); padding: 20px; text-align: center; box-shadow: 0 2px 15px rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 100; }
+        .logo { font-weight: 700; color: var(--primaria); font-size: 1.3rem; text-transform: uppercase; }
+        .status-badge { font-size: 0.7rem; font-weight: bold; padding: 5px 12px; border-radius: 20px; display: inline-block; margin-top: 5px; border: 1px solid #ddd; }
+        .open { color: var(--secundaria); border-color: var(--secundaria); background: #f0fff4; }
+        .closed { color: #e74c3c; border-color: #e74c3c; background: #fff5f5; }
+
+        .container { max-width: 500px; margin: auto; }
+        .titulo-secao { padding: 25px 15px 10px; font-weight: 700; color: #636e72; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; }
+
+        .card-produto { background: var(--branco); margin: 0 15px 10px; padding: 15px; border-radius: 15px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #eee; cursor: pointer; transition: 0.2s; }
+        .card-produto:active { transform: scale(0.97); }
+        .info-p h4 { font-size: 0.95rem; color: var(--texto); }
+        .info-p p { font-size: 0.75rem; color: #b2bec3; }
+        .preco-p { color: var(--secundaria); font-weight: 700; font-size: 0.95rem; margin-top: 5px; }
+        .btn-add { background: var(--primaria); color: white; width: 30px; height: 30px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: bold; }
+
+        /* MODAL */
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--branco); z-index: 1000; overflow-y: auto; padding: 20px; }
+        .header-modal { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .box-pergunta { background: #fff4eb; padding: 12px; border-radius: 10px; font-weight: 700; font-size: 0.8rem; margin: 15px 0 10px; color: var(--primaria); text-transform: uppercase; }
+        .input-texto { width: 100%; padding: 14px; border: 1px solid #ddd; border-radius: 10px; font-size: 0.95rem; margin-bottom: 10px; }
+        .lista-vertical { display: flex; flex-direction: column; }
+        .check-linha { display: flex; justify-content: space-between; padding: 15px 5px; border-bottom: 1px solid #f1f2f6; align-items: center; font-size: 0.95rem; cursor: pointer; width: 100%; }
+        .check-linha input { width: 22px; height: 22px; accent-color: var(--primaria); }
+
+        /* CARRINHO */
+        .barra-carrinho { position: fixed; bottom: 0; width: 100%; max-width: 500px; background: var(--branco); padding: 15px; box-shadow: 0 -5px 20px rgba(0,0,0,0.05); display: none; z-index: 900; left: 50%; transform: translateX(-50%); }
+        .btn-checkout { background: var(--secundaria); color: white; width: 100%; padding: 15px; border-radius: 12px; border: none; font-weight: 700; display: flex; justify-content: space-between; align-items: center; cursor: pointer; }
+
+        /* CHECKOUT */
+        #tela-final { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--fundo); z-index: 1100; padding: 20px; overflow-y: auto; }
+        .resumo-card { background: var(--branco); padding: 15px; border-radius: 15px; margin-bottom: 20px; border: 1px solid #eee; }
+        .item-resumo { display: flex; justify-content: space-between; align-items: flex-start; padding-bottom: 12px; border-bottom: 1px solid #f1f2f6; margin-bottom: 12px; }
+        .btn-remover { background: none; border: none; color: #e74c3c; font-size: 0.75rem; font-weight: 600; cursor: pointer; margin-top: 5px; }
         
-        button.btn-finalizar { width: 100%; background: var(--secundaria); color: white; border: none; padding: 20px; font-weight: bold; cursor: pointer; border-radius: 12px; font-size: 1.1em; margin-top: 20px; box-shadow: 0 4px 0 #1e8449; transition: 0.2s; }
-        button.btn-finalizar:active { transform: translateY(2px); box-shadow: 0 2px 0 #1e8449; }
+        .campo { margin-bottom: 15px; }
+        .campo label { display: block; font-size: 0.7rem; font-weight: 700; color: #95a5a6; margin-bottom: 5px; text-transform: uppercase; }
+        .campo input, .campo select { width: 100%; padding: 14px; border: 1px solid #ddd; border-radius: 10px; font-size: 0.95rem; }
+        .btn-final { width: 100%; background: var(--secundaria); color: white; padding: 18px; border: none; border-radius: 12px; font-weight: 700; font-size: 1rem; cursor: pointer; }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h2>Temperos Baiano</h2>
-        <p class="info-entrega">📍 Ramos, Olaria e Bonsucesso<br>⏰ Pedidos das 11h às 14h</p>
-        
-        <h3>Escolha sua Marmita</h3>
-        
-        <div class="item-container">
-            <div class="item-row">
-                <label>Tam. P (1 Prot.)</label>
-                <span class="price">R$20,00</span>
-                <input type="number" id="q-20" value="0" min="0" onchange="calc()">
-            </div>
-            <input type="text" id="p-20" placeholder="Qual a proteína?">
-        </div>
 
-        <div class="item-container">
-            <div class="item-row">
-                <label>Tam. M (2 Prots.)</label>
-                <span class="price">R$22,00</span>
-                <input type="number" id="q-22" value="0" min="0" onchange="calc()">
-            </div>
-            <input type="text" id="p-22" placeholder="Quais as proteínas?">
-        </div>
+<div class="container">
+    <header>
+        <div class="logo">Temperos Baiano</div>
+        <div id="status-loja" class="status-badge">Verificando...</div>
+    </header>
 
-        <div class="item-container">
-            <div class="item-row">
-                <label>Carne Especial</label>
-                <span class="price">R$24,00</span>
-                <input type="number" id="q-24" value="0" min="0" onchange="calc()">
-            </div>
-            <input type="text" id="p-24" placeholder="Qual a carne de hoje?">
-        </div>
-
-        <h3>Dados e Pagamento</h3>
-        <input type="text" id="nome" placeholder="Seu Nome">
-        <input type="text" id="end" placeholder="Endereço Completo">
-        
-        <select id="metodo-pgto" onchange="togglePix()" style="width:100%; padding:12px; margin-top:10px; border-radius:8px; border:1px solid #ddd;">
-            <option value="Dinheiro">Pagar na Entrega (Dinheiro)</option>
-            <option value="Cartão">Pagar na Entrega (Cartão/Vale)</option>
-            <option value="Pix">Pagar Agora via Pix</option>
-        </select>
-
-        <div id="pix-area" class="pix-section" style="display:none;">
-            <p style="font-weight:bold; margin-bottom:5px;">Pagamento via Pix</p>
-            <p style="font-size:0.8em;">Chave-Pix(e-mail):</p>
-            <div class="pix-key" id="Chave-pix">restaurantetemperosbaiano@gmail.com</div>
-            <button class="btn-copy" onclick="copyPix()">Copiar Chave Pix</button>
-            <p style="font-size:0.7em; margin-top:10px; color:#e74c3c;">* Realize o pagamento e anexe o comprovante na conversa do WhatsApp.</p>
-        </div>
-
-        <div class="total-box">Total: <span id="total">R$ 0,00</span></div>
-
-        <button class="btn-finalizar" onclick="enviar()">FINALIZAR E ENVIAR PEDIDO</button>
+    <div class="titulo-secao">Marmitas do Dia</div>
+    <div class="card-produto" onclick="abrirCustomizacao('P', 20.00)">
+        <div class="info-p"><h4>Marmita P</h4><p>1 Proteína + Acompanhamentos</p><div class="preco-p">R$ 20,00</div></div>
+        <div class="btn-add">+</div>
+    </div>
+    <div class="card-produto" onclick="abrirCustomizacao('M', 22.00)">
+        <div class="info-p"><h4>Marmita M</h4><p>2 Proteínas + Acompanhamentos</p><div class="preco-p">R$ 22,00</div></div>
+        <div class="btn-add">+</div>
+    </div>
+    <div class="card-produto" onclick="abrirCustomizacao('Especial', 24.00)">
+        <div class="info-p"><h4>Marmita Especial</h4><p>Carne Premium + Acompanhamentos</p><div class="preco-p">R$ 24,00</div></div>
+        <div class="btn-add">+</div>
     </div>
 
-    <script>
-        function calc() {
-            let total = (document.getElementById('q-20').value * 20) + 
-                        (document.getElementById('q-22').value * 22) + 
-                        (document.getElementById('q-24').value * 24);
-            document.getElementById('total').innerText = `R$ ${total.toFixed(2).replace('.', ',')}`;
-        }
+    <div class="titulo-secao">Bebidas e Sucos</div>
+    <div id="lista-bebidas"></div>
+</div>
 
-        function togglePix() {
-            const area = document.getElementById('pix-area');
-            area.style.display = document.getElementById('metodo-pgto').value === 'Pix' ? 'block' : 'none';
-        }
+<div id="modal-montar" class="modal">
+    <div class="header-modal">
+        <h3 id="titulo-modal">Configurar Marmita</h3>
+        <button onclick="fecharModais()" style="background:none; border:none; font-size:1.5rem; color:#ccc;">✕</button>
+    </div>
+    <div class="box-pergunta">Qual a proteína?</div>
+    <input type="text" id="input-proteina" class="input-texto" placeholder="Ex: Frango, Carne, Ovo...">
+    <div class="box-pergunta">Acompanhamentos</div>
+    <div id="check-acompanhamentos" class="lista-vertical"></div>
+    <button onclick="confirmarItem()" style="width:100%; background:var(--primaria); color:white; padding:18px; border:none; border-radius:12px; margin-top:25px; font-weight:700;">Adicionar ao Pedido</button>
+</div>
 
-        function copyPix() {
-            const chave = document.getElementById('chave-pix').innerText;
-            navigator.clipboard.writeText(chave);
-            alert("Chave Pix copiada!");
-        }
+<div id="carrinho-fixo" class="barra-carrinho">
+    <button class="btn-checkout" onclick="irParaCheckout()">
+        <span id="txt-qtd">0 itens</span>
+        <span>Ver Carrinho</span>
+        <span id="txt-total">R$ 0,00</span>
+    </button>
+</div>
 
-        function enviar() {
-            const fone = "5521967714571";
-            const nome = document.getElementById('nome').value;
-            const end = document.getElementById('end').value;
-            const pgto = document.getElementById('metodo-pgto').value;
-            
-            if(!nome || !end) return alert("Por favor, preencha Nome e Endereço.");
+<div id="tela-final">
+    <div style="display:flex; justify-content:space-between; margin-bottom:20px;">
+        <h3>Seu Pedido</h3>
+        <button onclick="fecharModais()" style="background:none; border:none; color:var(--primaria); font-weight:700;">+ Adicionar Mais</button>
+    </div>
+    <div id="itens-final" class="resumo-card"></div>
+    <div class="campo"><label>Seu Nome</label><input type="text" id="nome-cliente"></div>
+    <div class="campo"><label>Endereço de Entrega</label><input type="text" id="end-cliente" placeholder="Rua, nº, bairro e referência"></div>
+    <div class="campo">
+        <label>Pagamento</label>
+        <select id="pgto-cliente">
+            <option value="Pix">Pix (Copia e Cola)</option>
+            <option value="Dinheiro">Dinheiro</option>
+            <option value="Cartão/Vale">Cartão / Vale</option>
+        </select>
+    </div>
+    <button onclick="finalizarNoZap()" class="btn-final">ENVIAR PARA O WHATSAPP</button>
+</div>
 
-            let itens = [];
-            const check = (idQ, idP, label) => {
-                const q = document.getElementById(idQ).value;
-                const p = document.getElementById(idP).value;
-                if(q > 0) itens.push(`- ${q}x ${label} (${p || 'Não informado'})`);
-            };
+<script>
+    let carrinho = [];
+    let selecionado = null;
 
-            check('q-20', 'p-20', 'Marmita R$20');
-            check('q-22', 'p-22', 'Marmita R$22');
-            check('q-24', 'p-24', 'Marmita R$24');
+    const accs = ["Arroz Branco", "Feijão Preto", "Feijão Marrom", "Macarrão Alho e Óleo", "Salada Verde", "Salada de Legumes", "Salada de Grão de Bico", "Farofa"];
+    
+    // BEBIDAS ATUALIZADAS CONFORME AS FOTOS
+    const bebs = [
+        {n: "Coca-Cola 2L", p: 14.00},
+        {n: "Pepsi 2L", p: 14.00},
+        {n: "Guaraná 2L", p: 14.00},
+        {n: "Guaraná 1.5L", p: 13.00},
+        {n: "Coca-Cola 1.5L", p: 12.00},
+        {n: "Guaraná 1L", p: 12.00},
+        {n: "Guaraná 600ml", p: 9.00},
+        {n: "Suco Natural 500ml", p: 8.00},
+        {n: "Coca Lata", p: 7.00},
+        {n: "Pepsi Lata", p: 7.00},
+        {n: "Sprite Lata", p: 7.00},
+        {n: "Fanta Lata", p: 7.00},
+        {n: "Guaraviton", p: 7.00},
+        {n: "H2O", p: 7.00},
+        {n: "Caçulinha", p: 4.50},
+        {n: "Água com Gás", p: 4.00},
+        {n: "Guaravita", p: 2.50},
+        {n: "Guaracamp", p: 2.50},
+        {n: "Água", p: 2.00}
+    ];
 
-            if(itens.length === 0) return alert("Adicione pelo menos uma marmita.");
+    document.getElementById('check-acompanhamentos').innerHTML = accs.map(a => `<label class="check-linha">${a} <input type="checkbox" value="${a}"></label>`).join('');
+    document.getElementById('lista-bebidas').innerHTML = bebs.map(b => `
+        <div class="card-produto" onclick="addBebida('${b.n}', ${b.p})">
+            <div class="info-p"><h4>${b.n}</h4><div class="preco-p">R$ ${b.p.toFixed(2).replace('.',',')}</div></div>
+            <div class="btn-add">+</div>
+        </div>`).join('');
 
-            let msg = `*NOVO PEDIDO - TEMPEROS BAIANO*%0A%0A`;
-            msg += `*Cliente:* ${nome}%0A*Endereço:* ${end}%0A*Pagamento:* ${pgto}%0A%0A`;
-            msg += `*ITENS:*%0A${itens.join('%0A')}%0A%0A`;
-            msg += `*TOTAL: ${document.getElementById('total').innerText}*`;
-            if(pgto === 'Pix') msg += `%0A%0A_Aguardando envio do comprovante pelo cliente._`;
-
-            window.open(`https://wa.me/${fone}?text=${msg}`);
-        }
-    </script>
+    function abrirCustomizacao(tam, preco) { selecionado = { tam, preco }; document.getElementById('titulo-modal').innerText = "Marmita " + tam; document.getElementById('modal-montar').style.display = 'block'; }
+    function fecharModais() { document.querySelectorAll('.modal, #tela-final').forEach(m => m.style.display = 'none'); document.getElementById('input-proteina').value = ""; document.querySelectorAll('#check-acompanhamentos input').forEach(c => c.checked = false); }
+    function confirmarItem() {
+        const prot = document.getElementById('input-proteina').value;
+        if(!prot) return alert("Informe a proteína!");
+        let escolhidos = []; document.querySelectorAll('#check-acompanhamentos input:checked').forEach(i => escolhidos.push(i.value));
+        carrinho.push({ exibir: "Marmita " + selecionado.tam, valor: selecionado.preco, obs: `Prot: ${prot} | Acc: ${escolhidos.join(', ')}` });
+        atualizarCarrinho(); fecharModais();
+    }
+    function addBebida(nome, preco) { carrinho.push({ exibir: nome, valor: preco, obs: "Bebida Gelada" }); atualizarCarrinho(); }
+    function remover(index) { carrinho.splice(index, 1); if(carrinho.length === 0) fecharModais(); else irParaCheckout(); atualizarCarrinho(); }
+    function atualizarCarrinho() {
+        const bar = document.getElementById('carrinho-fixo');
+        if(carrinho.length > 0) {
+            bar.style.display = 'block';
+            const total = carrinho.reduce((s, i) => s + i.valor, 0);
+            document.getElementById('txt-qtd').innerText = carrinho.length + " item(ns)";
+            document.getElementById('txt-total').innerText = "R$ " + total.toFixed(2).replace('.',',');
+        } else { bar.style.display = 'none'; }
+    }
+    function irParaCheckout() {
+        document.getElementById('tela-final').style.display = 'block';
+        document.getElementById('itens-final').innerHTML = carrinho.map((item, index) => `
+            <div class="item-resumo">
+                <div style="flex:1"><strong style="font-size:0.9rem;">${item.exibir}</strong><br><span style="font-size:0.7rem; color:#636e72;">${item.obs}</span><br><button class="btn-remover" onclick="remover(${index})">✕ Remover</button></div>
+                <div style="font-weight:700; font-size:0.9rem;">R$ ${item.valor.toFixed(2).replace('.',',')}</div>
+            </div>`).join('') + `<div style="display:flex; justify-content:space-between; margin-top:15px; font-weight:700; color:var(--secundaria);"><span>Total:</span><span>R$ ${carrinho.reduce((s,i)=>s+i.valor,0).toFixed(2).replace('.',',')}</span></div>`;
+    }
+    function finalizarNoZap() {
+        const n = document.getElementById('nome-cliente').value; const e = document.getElementById('end-cliente').value; const p = document.getElementById('pgto-cliente').value;
+        if(!n || !e) return alert("Preencha Nome e Endereço!");
+        let txt = `*PEDIDO ONLINE: TEMPEROS BAIANO*%0A%0A*Cliente:* ${n}%0A*End:* ${e}%0A*PG:* ${p}%0A----------------------------%0A`;
+        carrinho.forEach((i, idx) => { txt += `*${idx+1}. ${i.exibir}* (R$ ${i.valor.toFixed(2)})%0A_${i.obs}_%0A%0A`; });
+        txt += `----------------------------%0A*TOTAL: R$ ${carrinho.reduce((s,i)=>s+i.valor,0).toFixed(2).replace('.',',')}*`;
+        window.open(`https://wa.me/5521967714571?text=${txt}`);
+    }
+    const h = new Date().getHours(); const st = document.getElementById('status-loja');
+    if(h >= 11 && h < 14) { st.innerText = "● ABERTO AGORA"; st.className = "status-badge open"; }
+    else { st.innerText = "○ FECHADO - Abre às 11h"; st.className = "status-badge closed"; }
+</script>
 </body>
 </html>
