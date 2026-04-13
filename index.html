@@ -31,6 +31,7 @@
         .info-p h4 { font-size: 0.95rem; color: var(--texto); }
         .info-p p { font-size: 0.75rem; color: #b2bec3; }
         .preco-p { color: var(--secundaria); font-weight: 700; font-size: 0.95rem; margin-top: 5px; }
+        .aviso-preco { font-size: 0.65rem; color: #e67e22; font-style: italic; }
         .btn-add { background: var(--primaria); color: white; width: 30px; height: 30px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: bold; }
 
         /* MODAL */
@@ -54,7 +55,7 @@
         
         .campo { margin-bottom: 15px; }
         .campo label { display: block; font-size: 0.7rem; font-weight: 700; color: #95a5a6; margin-bottom: 5px; text-transform: uppercase; }
-        .campo input, .campo select { width: 100%; padding: 14px; border: 1px solid #ddd; border-radius: 10px; font-size: 0.95rem; }
+        .campo input, .campo select { width: 100%; padding: 14px; border: 1px solid #ddd; border-radius: 10px; font-size: 0.95rem; background: white; }
         .btn-final { width: 100%; background: var(--secundaria); color: white; padding: 18px; border: none; border-radius: 12px; font-weight: 700; font-size: 1rem; cursor: pointer; }
     </style>
 </head>
@@ -67,16 +68,24 @@
     </header>
 
     <div class="titulo-secao">Marmitas do Dia</div>
+    
     <div class="card-produto" onclick="abrirCustomizacao('P', 20.00)">
-        <div class="info-p"><h4>Marmita P</h4><p>1 Proteína + Acompanhamentos</p><div class="preco-p">R$ 20,00</div></div>
+        <div class="info-p">
+            <h4>Marmita P</h4>
+            <p>1 Proteína + Acompanhamentos</p>
+            <div class="preco-p">R$ 20,00</div>
+            <span class="aviso-preco">* Carne vermelha: R$ 22,00</span>
+        </div>
         <div class="btn-add">+</div>
     </div>
+
     <div class="card-produto" onclick="abrirCustomizacao('M', 22.00)">
-        <div class="info-p"><h4>Marmita M</h4><p>2 Proteínas + Acompanhamentos</p><div class="preco-p">R$ 22,00</div></div>
-        <div class="btn-add">+</div>
-    </div>
-    <div class="card-produto" onclick="abrirCustomizacao('Especial', 24.00)">
-        <div class="info-p"><h4>Marmita Especial</h4><p>Carne Premium + Acompanhamentos</p><div class="preco-p">R$ 24,00</div></div>
+        <div class="info-p">
+            <h4>Marmita M</h4>
+            <p>2 Proteínas + Acompanhamentos</p>
+            <div class="preco-p">R$ 22,00</div>
+            <span class="aviso-preco">* Carne vermelha: R$ 24,00</span>
+        </div>
         <div class="btn-add">+</div>
     </div>
 
@@ -89,10 +98,18 @@
         <h3 id="titulo-modal">Configurar Marmita</h3>
         <button onclick="fecharModais()" style="background:none; border:none; font-size:1.5rem; color:#ccc;">✕</button>
     </div>
+
     <div class="box-pergunta">Qual a proteína?</div>
     <input type="text" id="input-proteina" class="input-texto" placeholder="Ex: Frango, Carne, Ovo...">
+    
+    <label class="check-linha" style="background: #fff5f5; border-radius: 10px; padding: 10px; margin-bottom: 15px; border: 1px solid #ffcfcf;">
+        <span style="font-size: 0.85rem; font-weight: 600;">Contém Carne Vermelha? (+ R$ 2,00)</span>
+        <input type="checkbox" id="check-carne-vermelha">
+    </label>
+
     <div class="box-pergunta">Acompanhamentos</div>
     <div id="check-acompanhamentos" class="lista-vertical"></div>
+    
     <button onclick="confirmarItem()" style="width:100%; background:var(--primaria); color:white; padding:18px; border:none; border-radius:12px; margin-top:25px; font-weight:700;">Adicionar ao Pedido</button>
 </div>
 
@@ -109,9 +126,32 @@
         <h3>Seu Pedido</h3>
         <button onclick="fecharModais()" style="background:none; border:none; color:var(--primaria); font-weight:700;">+ Adicionar Mais</button>
     </div>
+    
     <div id="itens-final" class="resumo-card"></div>
-    <div class="campo"><label>Seu Nome</label><input type="text" id="nome-cliente"></div>
-    <div class="campo"><label>Endereço de Entrega</label><input type="text" id="end-cliente" placeholder="Rua, nº, bairro e referência"></div>
+
+    <div class="campo">
+        <label>Seu Nome</label>
+        <input type="text" id="nome-cliente">
+    </div>
+
+    <div class="campo">
+        <label>Endereço de Entrega</label>
+        <input type="text" id="end-cliente" placeholder="Rua, nº, bairro e referência">
+    </div>
+
+    <div class="campo">
+        <label>Horário de Entrega</label>
+        <select id="horario-entrega">
+            <option value="11:30">11:30</option>
+            <option value="12:00">12:00</option>
+            <option value="12:30">12:30</option>
+            <option value="13:00">13:00</option>
+            <option value="13:30">13:30</option>
+            <option value="14:00">14:00</option>
+            <option value="14:30">14:30</option>
+        </select>
+    </div>
+
     <div class="campo">
         <label>Pagamento</label>
         <select id="pgto-cliente">
@@ -120,6 +160,7 @@
             <option value="Cartão/Vale">Cartão / Vale</option>
         </select>
     </div>
+
     <button onclick="finalizarNoZap()" class="btn-final">ENVIAR PARA O WHATSAPP</button>
 </div>
 
@@ -127,31 +168,19 @@
     let carrinho = [];
     let selecionado = null;
 
-    const accs = ["Arroz Branco", "Feijão Preto", "Feijão Marrom", "Macarrão Alho e Óleo", "Salada Verde", "Salada de Legumes", "Farofa"];
+    // LISTA DE ACOMPANHAMENTOS ATUALIZADA
+    const accs = ["Arroz Branco", "Feijão Preto", "Feijão Marrom", "Macarrão Alho e Óleo", "Macarronese", "Salada Verde", "Salada de Legumes", "Farofa"];
     
-    // BEBIDAS ATUALIZADAS CONFORME AS FOTOS
     const bebs = [
-        {n: "Coca-Cola 2L", p: 14.00},
-        {n: "Pepsi 2L", p: 14.00},
-        {n: "Guaraná 2L", p: 14.00},
-        {n: "Guaraná 1.5L", p: 13.00},
-        {n: "Coca-Cola 1.5L", p: 12.00},
-        {n: "Guaraná 1L", p: 12.00},
-        {n: "Guaraná 600ml", p: 9.00},
-        {n: "Suco Natural 500ml", p: 8.00},
-        {n: "Coca Lata", p: 7.00},
-        {n: "Pepsi Lata", p: 7.00},
-        {n: "Sprite Lata", p: 7.00},
-        {n: "Fanta Lata", p: 7.00},
-        {n: "Guaraviton", p: 7.00},
-        {n: "H2O", p: 7.00},
-        {n: "Caçulinha", p: 4.50},
-        {n: "Água com Gás", p: 4.00},
-        {n: "Guaravita", p: 2.50},
-        {n: "Guaracamp", p: 2.50},
-        {n: "Água", p: 2.00}
+        {n: "Coca-Cola 2L", p: 14.00}, {n: "Pepsi 2L", p: 14.00}, {n: "Guaraná 2L", p: 14.00},
+        {n: "Guaraná 1.5L", p: 13.00}, {n: "Coca-Cola 1.5L", p: 12.00}, {n: "Guaraná 1L", p: 12.00},
+        {n: "Guaraná 600ml", p: 9.00}, {n: "Suco Natural 500ml", p: 8.00}, {n: "Coca Lata", p: 7.00},
+        {n: "Pepsi Lata", p: 7.00}, {n: "Sprite Lata", p: 7.00}, {n: "Fanta Lata", p: 7.00},
+        {n: "Guaraviton", p: 7.00}, {n: "H2O", p: 7.00}, {n: "Caçulinha", p: 4.50},
+        {n: "Água com Gás", p: 4.00}, {n: "Guaravita", p: 2.50}, {n: "Guaracamp", p: 2.50}, {n: "Água", p: 2.00}
     ];
 
+    // Renderiza acompanhamentos e bebidas
     document.getElementById('check-acompanhamentos').innerHTML = accs.map(a => `<label class="check-linha">${a} <input type="checkbox" value="${a}"></label>`).join('');
     document.getElementById('lista-bebidas').innerHTML = bebs.map(b => `
         <div class="card-produto" onclick="addBebida('${b.n}', ${b.p})">
@@ -159,17 +188,57 @@
             <div class="btn-add">+</div>
         </div>`).join('');
 
-    function abrirCustomizacao(tam, preco) { selecionado = { tam, preco }; document.getElementById('titulo-modal').innerText = "Marmita " + tam; document.getElementById('modal-montar').style.display = 'block'; }
-    function fecharModais() { document.querySelectorAll('.modal, #tela-final').forEach(m => m.style.display = 'none'); document.getElementById('input-proteina').value = ""; document.querySelectorAll('#check-acompanhamentos input').forEach(c => c.checked = false); }
+    function abrirCustomizacao(tam, preco) { 
+        selecionado = { tam, preco }; 
+        document.getElementById('titulo-modal').innerText = "Marmita " + tam; 
+        document.getElementById('modal-montar').style.display = 'block'; 
+    }
+
+    function fecharModais() { 
+        document.querySelectorAll('.modal, #tela-final').forEach(m => m.style.display = 'none'); 
+        document.getElementById('input-proteina').value = ""; 
+        document.getElementById('check-carne-vermelha').checked = false;
+        document.querySelectorAll('#check-acompanhamentos input').forEach(c => c.checked = false); 
+    }
+
     function confirmarItem() {
         const prot = document.getElementById('input-proteina').value;
+        const temCarneVermelha = document.getElementById('check-carne-vermelha').checked;
+        
         if(!prot) return alert("Informe a proteína!");
-        let escolhidos = []; document.querySelectorAll('#check-acompanhamentos input:checked').forEach(i => escolhidos.push(i.value));
-        carrinho.push({ exibir: "Marmita " + selecionado.tam, valor: selecionado.preco, obs: `Prot: ${prot} | Acc: ${escolhidos.join(', ')}` });
-        atualizarCarrinho(); fecharModais();
+        
+        let valorFinal = selecionado.preco;
+        let infoCarne = "";
+        
+        if(temCarneVermelha) {
+            valorFinal += 2.00;
+            infoCarne = " (C/ Carne Vermelha)";
+        }
+
+        let escolhidos = []; 
+        document.querySelectorAll('#check-acompanhamentos input:checked').forEach(i => escolhidos.push(i.value));
+        
+        carrinho.push({ 
+            exibir: "Marmita " + selecionado.tam + infoCarne, 
+            valor: valorFinal, 
+            obs: `Prot: ${prot} | Acc: ${escolhidos.join(', ')}` 
+        });
+
+        atualizarCarrinho(); 
+        fecharModais();
     }
-    function addBebida(nome, preco) { carrinho.push({ exibir: nome, valor: preco, obs: "Bebida Gelada" }); atualizarCarrinho(); }
-    function remover(index) { carrinho.splice(index, 1); if(carrinho.length === 0) fecharModais(); else irParaCheckout(); atualizarCarrinho(); }
+
+    function addBebida(nome, preco) { 
+        carrinho.push({ exibir: nome, valor: preco, obs: "Bebida Gelada" }); 
+        atualizarCarrinho(); 
+    }
+
+    function remover(index) { 
+        carrinho.splice(index, 1); 
+        if(carrinho.length === 0) fecharModais(); else irParaCheckout(); 
+        atualizarCarrinho(); 
+    }
+
     function atualizarCarrinho() {
         const bar = document.getElementById('carrinho-fixo');
         if(carrinho.length > 0) {
@@ -179,25 +248,51 @@
             document.getElementById('txt-total').innerText = "R$ " + total.toFixed(2).replace('.',',');
         } else { bar.style.display = 'none'; }
     }
+
     function irParaCheckout() {
         document.getElementById('tela-final').style.display = 'block';
+        const total = carrinho.reduce((s,i)=>s+i.valor,0);
         document.getElementById('itens-final').innerHTML = carrinho.map((item, index) => `
             <div class="item-resumo">
                 <div style="flex:1"><strong style="font-size:0.9rem;">${item.exibir}</strong><br><span style="font-size:0.7rem; color:#636e72;">${item.obs}</span><br><button class="btn-remover" onclick="remover(${index})">✕ Remover</button></div>
                 <div style="font-weight:700; font-size:0.9rem;">R$ ${item.valor.toFixed(2).replace('.',',')}</div>
-            </div>`).join('') + `<div style="display:flex; justify-content:space-between; margin-top:15px; font-weight:700; color:var(--secundaria);"><span>Total:</span><span>R$ ${carrinho.reduce((s,i)=>s+i.valor,0).toFixed(2).replace('.',',')}</span></div>`;
+            </div>`).join('') + `<div style="display:flex; justify-content:space-between; margin-top:15px; font-weight:700; color:var(--secundaria);"><span>Total:</span><span>R$ ${total.toFixed(2).replace('.',',')}</span></div>`;
     }
+
     function finalizarNoZap() {
-        const n = document.getElementById('nome-cliente').value; const e = document.getElementById('end-cliente').value; const p = document.getElementById('pgto-cliente').value;
+        const n = document.getElementById('nome-cliente').value; 
+        const e = document.getElementById('end-cliente').value; 
+        const p = document.getElementById('pgto-cliente').value;
+        const h = document.getElementById('horario-entrega').value;
+
         if(!n || !e) return alert("Preencha Nome e Endereço!");
-        let txt = `*PEDIDO ONLINE: TEMPEROS BAIANO*%0A%0A*Cliente:* ${n}%0A*End:* ${e}%0A*PG:* ${p}%0A----------------------------%0A`;
-        carrinho.forEach((i, idx) => { txt += `*${idx+1}. ${i.exibir}* (R$ ${i.valor.toFixed(2)})%0A_${i.obs}_%0A%0A`; });
+
+        let txt = `*PEDIDO ONLINE: TEMPEROS BAIANO*%0A%0A`;
+        txt += `*Cliente:* ${n}%0A`;
+        txt += `*End:* ${e}%0A`;
+        txt += `*Horário de Entrega:* ${h}%0A`;
+        txt += `*PG:* ${p}%0A`;
+        txt += `----------------------------%0A`;
+        
+        carrinho.forEach((i, idx) => { 
+            txt += `*${idx+1}. ${i.exibir}* (R$ ${i.valor.toFixed(2).replace('.',',')})%0A_${i.obs}_%0A%0A`; 
+        });
+
         txt += `----------------------------%0A*TOTAL: R$ ${carrinho.reduce((s,i)=>s+i.valor,0).toFixed(2).replace('.',',')}*`;
+        
         window.open(`https://wa.me/5521967714571?text=${txt}`);
     }
-    const h = new Date().getHours(); const st = document.getElementById('status-loja');
-    if(h >= 11 && h < 14) { st.innerText = "● ABERTO AGORA"; st.className = "status-badge open"; }
-    else { st.innerText = "○ FECHADO - Abre às 11h"; st.className = "status-badge closed"; }
+
+    // Status da Loja
+    const horaAtual = new Date().getHours(); 
+    const st = document.getElementById('status-loja');
+    if(horaAtual >= 11 && horaAtual < 15) { 
+        st.innerText = "● ABERTO AGORA"; 
+        st.className = "status-badge open"; 
+    } else { 
+        st.innerText = "○ FECHADO - Abre às 11h"; 
+        st.className = "status-badge closed"; 
+    }
 </script>
 </body>
 </html>
