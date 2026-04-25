@@ -283,10 +283,37 @@
         window.open(`https://wa.me/5521967714571?text=${txt}`);
     }
 
-    const horaAtual = new Date().getHours(); 
-    const st = document.getElementById('status-loja');
-    if(horaAtual >= 11 && horaAtual < 15) { st.innerText = "● ABERTO AGORA"; st.className = "status-badge open"; } 
-    else { st.innerText = "○ FECHADO - Abre às 11h"; st.className = "status-badge closed"; }
+    // ATUALIZAÇÃO AUTOMÁTICA DE STATUS (Segunda a Sexta, 11h às 15h)
+    function atualizarStatusLoja() {
+        const agora = new Date();
+        const diaSemana = agora.getDay(); // 0=Dom, 1=Seg, ..., 6=Sab
+        const hora = agora.getHours();
+        const st = document.getElementById('status-loja');
+
+        // Abre apenas de Segunda(1) a Sexta(5)
+        const isDiaUtil = diaSemana >= 1 && diaSemana <= 5;
+        // Horário de funcionamento: 11h às 15h
+        const isHorarioComercial = hora >= 11 && hora < 15;
+
+        if (isDiaUtil && isHorarioComercial) {
+            st.innerText = "● ABERTO AGORA";
+            st.className = "status-badge open";
+        } else {
+            let msg = "○ FECHADO";
+            if (diaSemana === 0 || diaSemana === 6) {
+                msg += " - Abre Segunda às 11h";
+            } else if (hora < 11) {
+                msg += " - Abre às 11h";
+            } else {
+                msg += (diaSemana === 5) ? " - Abre Segunda às 11h" : " - Abre amanhã às 11h";
+            }
+            st.innerText = msg;
+            st.className = "status-badge closed";
+        }
+    }
+
+    // Executa a verificação ao carregar
+    atualizarStatusLoja();
 </script>
 </body>
 </html>
