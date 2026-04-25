@@ -38,7 +38,30 @@
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--branco); z-index: 1000; overflow-y: auto; padding: 20px; }
         .header-modal { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
         .box-pergunta { background: #fff4eb; padding: 12px; border-radius: 10px; font-weight: 700; font-size: 0.8rem; margin: 15px 0 10px; color: var(--primaria); text-transform: uppercase; }
-        .input-texto { width: 100%; padding: 14px; border: 1px solid #ddd; border-radius: 10px; font-size: 0.95rem; margin-bottom: 10px; }
+        
+        /* LISTA DE PROTEÍNAS COM ROLAGEM */
+        .lista-selecao { 
+            display: flex; 
+            flex-direction: column; 
+            gap: 8px; 
+            max-height: 250px; 
+            overflow-y: auto; 
+            padding: 10px 5px;
+            border: 1px solid #eee;
+            border-radius: 12px;
+            background: #fdfdfd;
+        }
+        .lista-selecao::-webkit-scrollbar { width: 6px; }
+        .lista-selecao::-webkit-scrollbar-thumb { background-color: #ddd; border-radius: 10px; }
+
+        .item-selecao { 
+            padding: 12px; border: 1px solid #ddd; border-radius: 10px; cursor: pointer; 
+            font-size: 0.85rem; transition: 0.2s; display: flex; justify-content: space-between; align-items: center;
+        }
+        .item-selecao.active { background: var(--primaria); color: white; border-color: var(--primaria); font-weight: 600; }
+        .badge-extra { font-size: 0.65rem; background: rgba(0,0,0,0.1); padding: 2px 6px; border-radius: 4px; color: #e67e22; }
+        .active .badge-extra { color: white; background: rgba(255,255,255,0.2); }
+
         .lista-vertical { display: flex; flex-direction: column; }
         .check-linha { display: flex; justify-content: space-between; padding: 15px 5px; border-bottom: 1px solid #f1f2f6; align-items: center; font-size: 0.95rem; cursor: pointer; width: 100%; }
         .check-linha input { width: 22px; height: 22px; accent-color: var(--primaria); }
@@ -99,18 +122,13 @@
         <button onclick="fecharModais()" style="background:none; border:none; font-size:1.5rem; color:#ccc;">✕</button>
     </div>
 
-    <div class="box-pergunta">Qual a proteína?</div>
-    <input type="text" id="input-proteina" class="input-texto" placeholder="Ex: Frango, Carne, Ovo...">
-    
-    <label class="check-linha" style="background: #fff5f5; border-radius: 10px; padding: 10px; margin-bottom: 15px; border: 1px solid #ffcfcf;">
-        <span style="font-size: 0.85rem; font-weight: 600;">Contém Carne Vermelha? (+ R$ 3,00)</span>
-        <input type="checkbox" id="check-carne-vermelha">
-    </label>
+    <div class="box-pergunta">Escolha a Proteína</div>
+    <div id="lista-proteinas" class="lista-selecao"></div>
 
     <div class="box-pergunta">Acompanhamentos</div>
     <div id="check-acompanhamentos" class="lista-vertical"></div>
     
-    <button onclick="confirmarItem()" style="width:100%; background:var(--primaria); color:white; padding:18px; border:none; border-radius:12px; margin-top:25px; font-weight:700;">Adicionar ao Pedido</button>
+    <button id="btn-confirmar" onclick="confirmarItem()" style="width:100%; background:var(--primaria); color:white; padding:18px; border:none; border-radius:12px; margin-top:25px; font-weight:700; opacity:0.5;" disabled>Selecione a Proteína</button>
 </div>
 
 <div id="carrinho-fixo" class="barra-carrinho">
@@ -126,51 +144,39 @@
         <h3>Seu Pedido</h3>
         <button onclick="fecharModais()" style="background:none; border:none; color:var(--primaria); font-weight:700;">+ Adicionar Mais</button>
     </div>
-    
     <div id="itens-final" class="resumo-card"></div>
-
-    <div class="campo">
-        <label>Seu Nome</label>
-        <input type="text" id="nome-cliente">
-    </div>
-
-    <div class="campo">
-        <label>Endereço de Entrega</label>
-        <input type="text" id="end-cliente" placeholder="Rua, nº, bairro e referência">
-    </div>
-
-    <div class="campo">
-        <label>Horário de Entrega</label>
-        <select id="horario-entrega">
-            <option value="11:30">11:30</option>
-            <option value="12:00">12:00</option>
-            <option value="12:30">12:30</option>
-            <option value="13:00">13:00</option>
-            <option value="13:30">13:30</option>
-            <option value="14:00">14:00</option>
-            <option value="14:30">14:30</option>
-        </select>
-    </div>
-
-    <div class="campo">
-        <label>Pagamento</label>
-        <select id="pgto-cliente">
-            <option value="Pix">Pix (Copia e Cola)</option>
-            <option value="Dinheiro">Dinheiro</option>
-            <option value="Cartão/Vale">Cartão / Vale</option>
-        </select>
-    </div>
-
+    <div class="campo"><label>Seu Nome</label><input type="text" id="nome-cliente"></div>
+    <div class="campo"><label>Endereço de Entrega</label><input type="text" id="end-cliente" placeholder="Rua, nº, bairro e referência"></div>
+    <div class="campo"><label>Horário de Entrega</label><select id="horario-entrega"><option value="11:30">11:30</option><option value="12:00">12:00</option><option value="12:30">12:30</option><option value="13:00">13:00</option><option value="13:30">13:30</option><option value="14:00">14:00</option><option value="14:30">14:30</option></select></div>
+    <div class="campo"><label>Pagamento</label><select id="pgto-cliente"><option value="Pix">Pix (Copia e Cola)</option><option value="Dinheiro">Dinheiro</option><option value="Cartão/Vale">Cartão / Vale</option></select></div>
     <button onclick="finalizarNoZap()" class="btn-final">ENVIAR PARA O WHATSAPP</button>
 </div>
 
 <script>
     let carrinho = [];
     let selecionado = null;
+    let proteinaEscolhida = null;
 
-    // LISTA DE ACOMPANHAMENTOS ATUALIZADA
+    const listaProteinas = [
+        {n: "Frango cozido com quiabo", extra: false},
+        {n: "Moela com batata", extra: false},
+        {n: "Escondidinho de carne moída", extra: true},
+        {n: "Panqueca de carne moída", extra: true},
+        {n: "Bife com batata frita", extra: true},
+        {n: "Frango parmegiana com batata frita", extra: false},
+        {n: "Empadão de frango", extra: false},
+        {n: "Lasanha de carne moída", extra: true},
+        {n: "Almôndega com purê de batata", extra: true},
+        {n: "Fígado com purê de batata", extra: true},
+        {n: "Pernil suino", extra: false},
+        {n: "Carré suino com purê de batata", extra: false},
+        {n: "Carré suino com couve mineira", extra: false},
+        {n: "Filé de peixe com purê de batata", extra: false},
+        {n: "Filé de frango grelhado", extra: false},
+        {n: "Isca de frango no molho rosé", extra: false}
+    ];
+
     const accs = ["Arroz Branco", "Feijão Preto", "Feijão Marrom", "Macarrão Alho e Óleo", "Macarronese", "Salada Verde", "Salada de Legumes", "Farofa"];
-    
     const bebs = [
         {n: "Coca-Cola 2L", p: 14.00}, {n: "Pepsi 2L", p: 14.00}, {n: "Guaraná 2L", p: 14.00},
         {n: "Guaraná 1.5L", p: 13.00}, {n: "Coca-Cola 1.5L", p: 12.00}, {n: "Guaraná 1L", p: 12.00},
@@ -180,7 +186,6 @@
         {n: "Água com Gás", p: 4.00}, {n: "Guaravita", p: 2.50}, {n: "Guaracamp", p: 2.50}, {n: "Água", p: 2.00}
     ];
 
-    // Renderiza acompanhamentos e bebidas
     document.getElementById('check-acompanhamentos').innerHTML = accs.map(a => `<label class="check-linha">${a} <input type="checkbox" value="${a}"></label>`).join('');
     document.getElementById('lista-bebidas').innerHTML = bebs.map(b => `
         <div class="card-produto" onclick="addBebida('${b.n}', ${b.p})">
@@ -188,42 +193,49 @@
             <div class="btn-add">+</div>
         </div>`).join('');
 
+    function renderizarProteinas() {
+        document.getElementById('lista-proteinas').innerHTML = listaProteinas.map((p, i) => `
+            <div class="item-selecao ${proteinaEscolhida === i ? 'active' : ''}" onclick="selecionarProt(${i})">
+                ${p.n} ${p.extra ? '<span class="badge-extra">+R$ 3,00</span>' : ''}
+            </div>
+        `).join('');
+    }
+
     function abrirCustomizacao(tam, preco) { 
         selecionado = { tam, preco }; 
+        proteinaEscolhida = null;
+        renderizarProteinas();
+        document.getElementById('btn-confirmar').disabled = true;
+        document.getElementById('btn-confirmar').style.opacity = '0.5';
         document.getElementById('titulo-modal').innerText = "Marmita " + tam; 
         document.getElementById('modal-montar').style.display = 'block'; 
     }
 
+    function selecionarProt(index) {
+        proteinaEscolhida = index;
+        renderizarProteinas();
+        document.getElementById('btn-confirmar').disabled = false;
+        document.getElementById('btn-confirmar').style.opacity = '1';
+    }
+
     function fecharModais() { 
         document.querySelectorAll('.modal, #tela-final').forEach(m => m.style.display = 'none'); 
-        document.getElementById('input-proteina').value = ""; 
-        document.getElementById('check-carne-vermelha').checked = false;
         document.querySelectorAll('#check-acompanhamentos input').forEach(c => c.checked = false); 
     }
 
     function confirmarItem() {
-        const prot = document.getElementById('input-proteina').value;
-        const temCarneVermelha = document.getElementById('check-carne-vermelha').checked;
-        
-        if(!prot) return alert("Informe a proteína!");
-        
+        if(proteinaEscolhida === null) return;
+        const protObj = listaProteinas[proteinaEscolhida];
         let valorFinal = selecionado.preco;
         let infoCarne = "";
-        
-        if(temCarneVermelha) {
-            valorFinal += 2.00;
-            infoCarne = " (C/ Carne Vermelha)";
-        }
-
+        if(protObj.extra) { valorFinal += 3.00; infoCarne = " (C/ Carne Vermelha)"; }
         let escolhidos = []; 
         document.querySelectorAll('#check-acompanhamentos input:checked').forEach(i => escolhidos.push(i.value));
-        
         carrinho.push({ 
             exibir: "Marmita " + selecionado.tam + infoCarne, 
             valor: valorFinal, 
-            obs: `Prot: ${prot} | Acc: ${escolhidos.join(', ')}` 
+            obs: `Prot: ${protObj.n} | Acc: ${escolhidos.join(', ')}` 
         });
-
         atualizarCarrinho(); 
         fecharModais();
     }
@@ -264,35 +276,17 @@
         const e = document.getElementById('end-cliente').value; 
         const p = document.getElementById('pgto-cliente').value;
         const h = document.getElementById('horario-entrega').value;
-
         if(!n || !e) return alert("Preencha Nome e Endereço!");
-
-        let txt = `*PEDIDO ONLINE: TEMPEROS BAIANO*%0A%0A`;
-        txt += `*Cliente:* ${n}%0A`;
-        txt += `*End:* ${e}%0A`;
-        txt += `*Horário de Entrega:* ${h}%0A`;
-        txt += `*PG:* ${p}%0A`;
-        txt += `----------------------------%0A`;
-        
-        carrinho.forEach((i, idx) => { 
-            txt += `*${idx+1}. ${i.exibir}* (R$ ${i.valor.toFixed(2).replace('.',',')})%0A_${i.obs}_%0A%0A`; 
-        });
-
+        let txt = `*PEDIDO ONLINE: TEMPEROS BAIANO*%0A%0A*Cliente:* ${n}%0A*End:* ${e}%0A*Horário:* ${h}%0A*PG:* ${p}%0A----------------------------%0A`;
+        carrinho.forEach((i, idx) => { txt += `*${idx+1}. ${i.exibir}* (R$ ${i.valor.toFixed(2).replace('.',',')})%0A_${i.obs}_%0A%0A`; });
         txt += `----------------------------%0A*TOTAL: R$ ${carrinho.reduce((s,i)=>s+i.valor,0).toFixed(2).replace('.',',')}*`;
-        
         window.open(`https://wa.me/5521967714571?text=${txt}`);
     }
 
-    // Status da Loja
     const horaAtual = new Date().getHours(); 
     const st = document.getElementById('status-loja');
-    if(horaAtual >= 11 && horaAtual < 15) { 
-        st.innerText = "● ABERTO AGORA"; 
-        st.className = "status-badge open"; 
-    } else { 
-        st.innerText = "○ FECHADO - Abre às 11h"; 
-        st.className = "status-badge closed"; 
-    }
+    if(horaAtual >= 11 && horaAtual < 15) { st.innerText = "● ABERTO AGORA"; st.className = "status-badge open"; } 
+    else { st.innerText = "○ FECHADO - Abre às 11h"; st.className = "status-badge closed"; }
 </script>
 </body>
 </html>
